@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Demandas SEINFRA/UFG</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --primary-dark: #667eea;
+            --primary-light: #764ba2;
+            --accent: #f093fb;
+            --danger: #ff6b6b;
+            --warning: #ffd93d;
+            --success: #6bcf7f;
+            --info: #4ecdc4;
+            --bg-dark: #0f0f1e;
+            --bg-light: #1a1a2e;
+            --border: #2d2d44;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0b0;
+            --shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            --shadow-sm: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 40px 30px;
+        }
+
+        /* HEADER */
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: slideDown 0.8s ease-out;
+        }
+
+        .header h1 {
+            font-size: 3.2rem;
+            background: var(--primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .header .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .header .last-update {
+            font-size: 0.9rem;
+            color: var(--info);
+            font-weight: 500;
+        }
+
+        /* KPI CARDS */
+        .kpi-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+            animation: fadeIn 1s ease-out 0.2s both;
+        }
+
+        .kpi-card {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary-dark);
+            box-shadow: var(--shadow);
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .kpi-card:hover::before {
+            left: 100%;
+        }
+
+        .kpi-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.8;
+        }
+
+        .kpi-label {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .kpi-value {
+            font-size: 2.8rem;
+            font-weight: 700;
+            background: var(--primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .kpi-detail {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* CHARTS SECTION */
+        .charts-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+            animation: fadeIn 1s ease-out 0.4s both;
+        }
+
+        .chart-card {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .chart-card:hover {
+            border-color: var(--primary-dark);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .chart-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chart-title::before {
+            content: '';
+            width: 4px;
+            height: 28px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 350px;
+            margin-bottom: 15px;
+        }
+
+        /* TOP CARD */
+        .top-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 50px;
+            animation: fadeIn 1s ease-out 0.1s both;
+        }
+
+        .top-item {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .top-item:hover {
+            border-color: var(--primary-dark);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .top-item h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .top-item h3::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .top-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .top-item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .top-item-row:hover {
+            background: rgba(102, 126, 234, 0.1);
+            border-left-color: var(--primary-dark);
+            transform: translateX(5px);
+        }
+
+        .top-item-label {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .top-item-count {
+            background: var(--primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1200px) {
+            .charts-section {
+                grid-template-columns: 1fr;
+            }
+
+            .top-section {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 15px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .kpi-section {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .chart-container {
+                height: 280px;
+            }
+        }
+
+        /* ANIMATIONS */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <h1>📊 Dashboard de Demandas</h1>
+            <p class="subtitle">SEINFRA - Secretaria de Infraestrutura | UFG</p>
+            <p class="last-update">Última atualização: <span id="lastUpdate"></span></p>
+        </div>
+
+        <!-- KPI CARDS -->
+        <div class="kpi-section">
+            <div class="kpi-card">
+                <div class="kpi-icon">📋</div>
+                <div class="kpi-label">Total de Demandas</div>
+                <div class="kpi-value">400</div>
+                <div class="kpi-detail">Em processamento</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-icon">🔴</div>
+                <div class="kpi-label">Prioridade Alta</div>
+                <div class="kpi-value">113</div>
+                <div class="kpi-detail">27,8% do total</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-icon">🟡</div>
+                <div class="kpi-label">Prioridade Normal</div>
+                <div class="kpi-value">173</div>
+                <div class="kpi-detail">42,6% do total</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-icon">🟢</div>
+                <div class="kpi-label">Prioridade Baixa</div>
+                <div class="kpi-value">120</div>
+                <div class="kpi-detail">29,6% do total</div>
+            </div>
+        </div>
+
+        <!-- TOP SECTION -->
+        <div class="top-section">
+            <div class="top-item">
+                <h3>🏫 Top 6 Campuses</h3>
+                <div class="top-list">
+                    <div class="top-item-row">
+                        <span class="top-item-label">Samambaia</span>
+                        <span class="top-item-count">220</span>
+                    </div>
+                    <div class="top-item-row">
+                        <span class="top-item-label">Colemar</span>
+                        <span class="top-item-count">136</span>
+                    </div>
+                    <div class="top-item-row">
+                        <span class="top-item-label">Ap. Goiânia</span>
+                        <span class="top-item-count">10</span>
+                    </div>
+                    <div class="top-item-row">
+                        <span class="top-item-label">Goiás</span>
+                        <span class="top-item-count">9</span>
+                    </div>
+                    <div class="top-item-row">
+                        <span class="top-item-label">Firminópolis</span>
+                        <span class="top-item-count">9</span>
+                    </div>
+                    <div class="top-item-row">
+                        <span class="top-item-label">Outros</span>
+                        <span class="top-item-count">22</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="top-item">
+                <h3>🏢 Top 7 Unidades</h3>
+                <div class="top-list">
+                    <div class="top-item-row">
+                        <span class="top-item-label">SEINFRA</span>
+                        <span class="top-item-count">34</span>
+                    </div>
+                    <div class="top-item-row">
+                        <span class="top-item-label">FF</span>
+                        <span class="top-item-count">20</span>
+                    </div>
+                    <div class="top-item-row">
+                        <span class="top-item-label">IPTSP</span>
+                        <span class="top-item-count">20</span>
+                    </div>
+                    <div class="top-item-row">
+                        <span class="top-item-label">EVZ</span>
+                        <span class="top-item-count">19</span>
+                    </div>
+                    <div class="top-item-row">
+                        <span class="top-item-label">EA</span>
+                        <span class="top-item-count">16</span>
+                    </div>
+                    <div class="top-item-row">
+                        <span class="top-item-label">IQ</span>
+                        <span class="top-item-count">15</span>
+                    </div>
+                    <div class="top-item-row">
+                        <span class="top-item-label">PRAE</span>
+                        <span class="top-item-count">15</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHARTS SECTION -->
+        <div class="charts-section">
+            <!-- Processos por Ano -->
+            <div class="chart-card">
+                <div class="chart-title">📅 Processos Recebidos por Ano</div>
+                <div class="chart-container">
+                    <canvas id="yearChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Tipo de Demandas -->
+            <div class="chart-card">
+                <div class="chart-title">🔧 Tipo de Demandas</div>
+                <div class="chart-container">
+                    <canvas id="typeChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Prioridades -->
+            <div class="chart-card">
+                <div class="chart-title">📈 Distribuição por Prioridade</div>
+                <div class="chart-container">
+                    <canvas id="priorityChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Regionais -->
+            <div class="chart-card">
+                <div class="chart-title">🗺️ Distribuição por Regional</div>
+                <div class="chart-container">
+                    <canvas id="regionalChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Classificações -->
+            <div class="chart-card">
+                <div class="chart-title">📊 Classificação das Demandas</div>
+                <div class="chart-container">
+                    <canvas id="classificationChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Campuses -->
+            <div class="chart-card">
+                <div class="chart-title">🏫 Demandas por Campus</div>
+                <div class="chart-container">
+                    <canvas id="campusChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        Chart.register(ChartDataLabels);
+
+        // Update timestamp
+        document.getElementById('lastUpdate').textContent = new Date().toLocaleString('pt-BR');
+
+        // Chart defaults
+        Chart.defaults.color = '#a0a0b0';
+        Chart.defaults.borderColor = '#2d2d44';
+
+        // ========== GRÁFICO: Processos por Ano ==========
+        new Chart(document.getElementById('yearChart'), {
+            type: 'bar',
+            data: {
+                labels: ['2019', '2020', '2021', '2022', '2023', '2024', '2025', '2026'],
+                datasets: [{
+                    label: 'Processos Recebidos',
+                    data: [5, 1, 13, 64, 91, 93, 71, 62],
+                    backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                    borderColor: 'rgba(102, 126, 234, 1)',
+                    borderRadius: 8,
+                    borderSkipped: false,
+                    borderWidth: 2,
+                    hoverBackgroundColor: 'rgba(102, 126, 234, 1)',
+                    hoverBorderWidth: 3
+                }]
+            },
+            options: {
+                indexAxis: 'x',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    datalabels: {
+                        color: '#e0e0e0',
+                        font: {
+                            size: 12,
+                            weight: 'bold'
+                        },
+                        anchor: 'end',
+                        align: 'top',
+                        offset: 5
+                    },
+                    tooltip: {
+                        padding: 15,
+                        backgroundColor: 'rgba(15, 15, 30, 0.9)',
+                        titleFont: { size: 13, weight: 'bold' },
+                        bodyFont: { size: 12 }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 110,
+                        grid: { color: '#2d2d44' },
+                        ticks: {
+                            stepSize: 20
+                        }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // ========== GRÁFICO: Tipo de Demandas ==========
+        new Chart(document.getElementById('typeChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Reformas/Adequações', 'Avaliação/Parecer', 'Paisagismo', 'Construções Novas', 'Estruturas de Apoio', 'Regularização', 'Administrativo', 'Levantamento', 'Outros'],
+                datasets: [{
+                    data: [180, 44, 36, 28, 22, 21, 16, 6, 50],
+                    backgroundColor: [
+                        'rgba(255, 107, 107, 0.8)',
+                        'rgba(102, 126, 234, 0.8)',
+                        'rgba(240, 147, 251, 0.8)',
+                        'rgba(78, 205, 196, 0.8)',
+                        'rgba(255, 217, 61, 0.8)',
+                        'rgba(107, 199, 127, 0.8)',
+                        'rgba(255, 159, 64, 0.8)',
+                        'rgba(155, 89, 182, 0.8)',
+                        'rgba(100, 149, 237, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 107, 107, 1)',
+                        'rgba(102, 126, 234, 1)',
+                        'rgba(240, 147, 251, 1)',
+                        'rgba(78, 205, 196, 1)',
+                        'rgba(255, 217, 61, 1)',
+                        'rgba(107, 199, 127, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(155, 89, 182, 1)',
+                        'rgba(100, 149, 237, 1)'
+                    ],
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    hoverBorderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            padding: 15,
+                            font: { size: 11, weight: '500' },
+                            usePointStyle: true,
+                            pointStyle: 'circle'
+                        }
+                    },
+                    datalabels: {
+                        color: '#ffffff',
+                        font: {
+                            size: 13,
+                            weight: 'bold'
+                        },
+                        anchor: 'center',
+                        align: 'center',
+                        formatter: function(value) {
+                            return value;
+                        }
+                    },
+                    tooltip: {
+                        padding: 15,
+                        backgroundColor: 'rgba(15, 15, 30, 0.9)',
+                        titleFont: { size: 13, weight: 'bold' },
+                        bodyFont: { size: 12 },
+                        callbacks: {
+                            label: function(context) {
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((context.parsed / total) * 100).toFixed(1);
+                                return context.label + ': ' + context.parsed + ' (' + percentage + '%)';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // ========== GRÁFICO: Prioridade ==========
+        new Chart(document.getElementById('priorityChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Alta', 'Normal', 'Baixa'],
+                datasets: [{
+                    data: [113, 173, 120],
+                    backgroundColor: [
+                        'rgba(255, 107, 107, 0.8)',
+                        'rgba(255, 217, 61, 0.8)',
+                        'rgba(107, 199, 127, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 107, 107, 1)',
+                        'rgba(255, 217, 61, 1)',
+                        'rgba(107, 199, 127, 1)'
+                    ],
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    hoverBorderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            font: { size: 12, weight: '500' },
+                            usePointStyle: true,
+                            pointStyle: 'circle'
+                        }
+                    },
+                    datalabels: {
+                        color: '#ffffff',
+                        font: {
+                            size: 13,
+                            weight: 'bold'
+                        },
+                        anchor: 'center',
+                        align: 'center',
+                        formatter: function(value) {
+                            return value;
+                        }
+                    },
+                    tooltip: {
+                        padding: 15,
+                        backgroundColor: 'rgba(15, 15, 30, 0.9)',
+                        titleFont: { size: 13, weight: 'bold' },
+                        bodyFont: { size: 12 },
+                        callbacks: {
+                            label: function(context) {
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((context.parsed / total) * 100).toFixed(1);
+                                return context.label + ': ' + context.parsed + ' (' + percentage + '%)';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // ========== GRÁFICO: Regional ==========
+        new Chart(document.getElementById('regionalChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Goiânia', 'Goiás', 'Firminópolis', 'Outros'],
+                datasets: [{
+                    data: [378, 8, 9, 11],
+                    backgroundColor: [
+                        'rgba(102, 126, 234, 0.8)',
+                        'rgba(240, 147, 251, 0.8)',
+                        'rgba(78, 205, 196, 0.8)',
+                        'rgba(255, 217, 61, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(102, 126, 234, 1)',
+                        'rgba(240, 147, 251, 1)',
+                        'rgba(78, 205, 196, 1)',
+                        'rgba(255, 217, 61, 1)'
+                    ],
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    hoverBorderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            font: { size: 12, weight: '500' },
+                            usePointStyle: true
+                        }
+                    },
+                    datalabels: {
+                        color: '#ffffff',
+                        font: {
+                            size: 13,
+                            weight: 'bold'
+                        },
+                        anchor: 'center',
+                        align: 'center',
+                        formatter: function(value) {
+                            return value;
+                        }
+                    },
+                    tooltip: {
+                        padding: 15,
+                        backgroundColor: 'rgba(15, 15, 30, 0.9)',
+                        titleFont: { size: 13, weight: 'bold' },
+                        bodyFont: { size: 12 },
+                        callbacks: {
+                            label: function(context) {
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((context.parsed / total) * 100).toFixed(1);
+                                return context.label + ': ' + context.parsed + ' (' + percentage + '%)';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // ========== GRÁFICO: Classificação ==========
+        new Chart(document.getElementById('classificationChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Reformas/\nAdequações', 'Avaliação/\nParecer', 'Paisagismo', 'Construções', 'Estruturas', 'Regularização', 'Admin', 'Levantamento', 'Outros'],
+                datasets: [{
+                    label: 'Quantidade',
+                    data: [180, 44, 36, 28, 22, 21, 16, 6, 50],
+                    backgroundColor: [
+                        'rgba(255, 107, 107, 0.8)',
+                        'rgba(102, 126, 234, 0.8)',
+                        'rgba(240, 147, 251, 0.8)',
+                        'rgba(78, 205, 196, 0.8)',
+                        'rgba(255, 217, 61, 0.8)',
+                        'rgba(107, 199, 127, 0.8)',
+                        'rgba(255, 159, 64, 0.8)',
+                        'rgba(155, 89, 182, 0.8)',
+                        'rgba(100, 149, 237, 0.8)'
+                    ],
+                    borderRadius: 8,
+                    borderSkipped: false,
+                    hoverBackgroundColor: 'rgba(102, 126, 234, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    datalabels: {
+                        color: '#e0e0e0',
+                        font: {
+                            size: 11,
+                            weight: 'bold'
+                        },
+                        anchor: 'end',
+                        align: 'end',
+                        offset: 8
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        max: 200,
+                        grid: { color: '#2d2d44' }
+                    },
+                    y: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // ========== GRÁFICO: Campus ==========
+        new Chart(document.getElementById('campusChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Samambaia', 'Colemar', 'Ap. Goiânia', 'Goiás', 'Firminópolis', 'Outros'],
+                datasets: [{
+                    label: 'Quantidade de Demandas',
+                    data: [220, 136, 10, 9, 9, 22],
+                    backgroundColor: [
+                        'rgba(102, 126, 234, 0.8)',
+                        'rgba(240, 147, 251, 0.8)',
+                        'rgba(78, 205, 196, 0.8)',
+                        'rgba(255, 107, 107, 0.8)',
+                        'rgba(255, 217, 61, 0.8)',
+                        'rgba(107, 199, 127, 0.8)'
+                    ],
+                    borderRadius: 8,
+                    borderSkipped: false,
+                    hoverBackgroundColor: 'rgba(102, 126, 234, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                indexAxis: 'x',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    datalabels: {
+                        color: '#e0e0e0',
+                        font: {
+                            size: 12,
+                            weight: 'bold'
+                        },
+                        anchor: 'end',
+                        align: 'top',
+                        offset: 5
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 250,
+                        grid: { color: '#2d2d44' }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
