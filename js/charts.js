@@ -98,7 +98,7 @@ function renderCharts(data) {
                     labels: {
                         color: '#e5e7eb',
                         padding: 18,
-                        font: { size: 15, weight: '700' },
+                        font: { size: 20, weight: '700' },
                         usePointStyle: true
                     }
                 },
@@ -219,7 +219,7 @@ function renderCharts(data) {
                 },
                 y: {
                     grid: { display: false },
-                    ticks: { font: { size: 13 } }
+                    ticks: { font: { size: 18 } }
                 }
             }
         }
@@ -259,7 +259,7 @@ function renderCharts(data) {
                 },
                 x: {
                     grid: { display: false },
-                    ticks: { font: { size: 13 } }
+                    ticks: { font: { size: 18 } }
                 }
             }
         }
