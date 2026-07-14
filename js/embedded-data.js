@@ -132,6 +132,73 @@ const EMBEDDED_DATA = {
         "2021": 13,
         "2020": 1,
         "2019": 5
+    },
+    "data2026": {
+        "totalCount": 62,
+        "highCount": 21,
+        "normalCount": 18,
+        "lowCount": 23,
+        "campusMap": {
+            "Samambaia": 27,
+            "Colemar": 22,
+            "Firminópolis": 7,
+            "Goiás": 3,
+            "Não Definido": 3
+        },
+        "unitMap": {
+            "FM": 7,
+            "FIRMINOPOLIS": 7,
+            "SEINFRA": 4,
+            "EVZ": 3,
+            "FL": 3,
+            "IQ": 3,
+            "FD": 3,
+            "FF": 2,
+            "GR": 2,
+            "PROPESSOAS": 2,
+            "CEPAE": 2,
+            "EA": 2,
+            "IPTSP": 2,
+            "SIN": 2,
+            "ICB": 2,
+            "IESA": 2,
+            "PRAE": 2,
+            "BC": 1,
+            "CGA": 1,
+            "DCF": 1,
+            "DEC": 1,
+            "Reitoria": 1,
+            "FANUT": 1,
+            "DASS": 1,
+            "UAECSA-RG": 1,
+            "FEN": 1,
+            "PRPI": 1,
+            "DIR-RG": 1,
+            "FE": 1
+        },
+        "regionalMap": {
+            "Goiânia": 49,
+            "Goiás": 3,
+            "Não Definida": 3,
+            "Firminópolis": 7
+        },
+        "classificationMap": {
+            "Reformas/Adequaçoes": 32,
+            "Paisagismo": 6,
+            "Regularização/Aprovação": 2,
+            "Outros": 7,
+            "Administrativo": 4,
+            "Construções Novas": 8,
+            "Estruturas de Apoio": 2,
+            "Avaliação/Parecer/Estudo": 1
+        }
+    },
+    "completedMap": {
+        "2022": 35,
+        "2023": 62,
+        "2024": 63,
+        "2025": 68,
+        "2026": 45
     }
 };
 

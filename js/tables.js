@@ -1,5 +1,6 @@
-function updateCampusTable(map) {
-    const tbody = document.getElementById('campusTableBody');
+function updateCampusTable(map, tbodyId = 'campusTableBody') {
+    const tbody = document.getElementById(tbodyId);
+    if (!tbody) return;
     tbody.innerHTML = '';
 
     const sorted = Object.entries(map)
@@ -24,8 +25,9 @@ function updateCampusTable(map) {
     });
 }
 
-function updateUnitTable(map) {
-    const tbody = document.getElementById('unitTableBody');
+function updateUnitTable(map, tbodyId = 'unitTableBody') {
+    const tbody = document.getElementById(tbodyId);
+    if (!tbody) return;
     tbody.innerHTML = '';
 
     const sorted = Object.entries(map)

@@ -26,7 +26,8 @@ function startSlideshow() {
 }
 
 function nextSlide() {
-    activeSlideIndex = (activeSlideIndex + 1) % 3;
+    const slidesCount = document.querySelectorAll('.slide').length || 3;
+    activeSlideIndex = (activeSlideIndex + 1) % slidesCount;
     updateSlideUI();
 }
 
@@ -67,7 +68,7 @@ window.addEventListener('DOMContentLoaded', () => {
         Chart.register(ChartDataLabels);
         Chart.defaults.color = '#e5e7eb';
         Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.08)';
-        Chart.defaults.font.family = "'Outfit', sans-serif";
+        Chart.defaults.font.family = "'Inter', sans-serif";
         Chart.defaults.font.size = 14;
         Chart.defaults.font.weight = '600';
     } catch (e) {

@@ -49,15 +49,47 @@ function loadEmbeddedData() {
         document.getElementById('kpiNormalPct').textContent = `${pct(data.normalCount)}% do total`;
         document.getElementById('kpiLowPct').textContent = `${pct(data.lowCount)}% do total`;
 
+        // Calculate and populate all-time completed processes KPI
+        if (data.completedMap) {
+            const totalCompleted = Object.values(data.completedMap).reduce((acc, curr) => acc + curr, 0);
+            document.getElementById('kpiCompleted').textContent = totalCompleted;
+            document.getElementById('kpiCompletedPct').textContent = `${pct(totalCompleted)}% do total`;
+        }
+
         updateCampusTable(data.campusMap);
         updateUnitTable(data.unitMap);
 
+        // 2026-specific data
+        if (data.data2026) {
+            const d26 = data.data2026;
+            document.getElementById('kpiTotal2026').textContent = d26.totalCount;
+            document.getElementById('kpiHigh2026').textContent = d26.highCount;
+            document.getElementById('kpiNormal2026').textContent = d26.normalCount;
+            document.getElementById('kpiLow2026').textContent = d26.lowCount;
+
+            const pct26 = (v) => d26.totalCount ? ((v / d26.totalCount) * 100).toFixed(1) : 0;
+            document.getElementById('kpiHighPct2026').textContent = `${pct26(d26.highCount)}% do total`;
+            document.getElementById('kpiNormalPct2026').textContent = `${pct26(d26.normalCount)}% do total`;
+            document.getElementById('kpiLowPct2026').textContent = `${pct26(d26.lowCount)}% do total`;
+
+            // Calculate and populate 2026 completed processes KPI
+            if (data.completedMap) {
+                const completed2026 = data.completedMap["2026"] || 0;
+                document.getElementById('kpiCompleted2026').textContent = completed2026;
+                document.getElementById('kpiCompletedPct2026').textContent = `${pct26(completed2026)}% do total`;
+            }
+
+            updateCampusTable(d26.campusMap, 'campusTableBody2026');
+            updateUnitTable(d26.unitMap, 'unitTableBody2026');
+        }
+
         renderCharts({
             years: data.yearMap,
-            classifications: data.classificationMap,
+            classifications: data.data2026 ? data.data2026.classificationMap : data.classificationMap,
             priorities: { 'Alta': data.highCount, 'Normal': data.normalCount, 'Baixa': data.lowCount },
-            regionals: data.regionalMap,
-            campuses: data.campusMap
+            regionals: data.data2026 ? data.data2026.regionalMap : data.regionalMap,
+            campuses: data.data2026 ? data.data2026.campusMap : data.campusMap,
+            completed: data.completedMap
         });
 
         setSyncStatus('synced');
