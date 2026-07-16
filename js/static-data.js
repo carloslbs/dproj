@@ -86,20 +86,7 @@ window.STATIC_DATA = {
 function initStaticDashboard() {
     const data = window.STATIC_DATA;
     
-    // KPIs
-    document.getElementById('kpiTotal').textContent = data.totalCount;
-    document.getElementById('kpiHigh').textContent = data.highCount;
-    document.getElementById('kpiNormal').textContent = data.normalCount;
-    document.getElementById('kpiLow').textContent = data.lowCount;
-
-    const pct = (v) => data.totalCount ? ((v / data.totalCount) * 100).toFixed(1) : 0;
-    document.getElementById('kpiHighPct').textContent = `${pct(data.highCount)}% do total`;
-    document.getElementById('kpiNormalPct').textContent = `${pct(data.normalCount)}% do total`;
-    document.getElementById('kpiLowPct').textContent = `${pct(data.lowCount)}% do total`;
-
-    // Tabelas
-    if (window.updateCampusTable) updateCampusTable(data.campusMap);
-    if (window.updateUnitTable) updateUnitTable(data.unitMap);
+    // Elementos do slide 1 removidos
 
     // Gráficos
     if (window.renderCharts) {

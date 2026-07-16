@@ -39,25 +39,7 @@ function loadEmbeddedData() {
 
         const data = window.EMBEDDED_DATA;
 
-        document.getElementById('kpiTotal').textContent = data.totalCount;
-        document.getElementById('kpiHigh').textContent = data.highCount;
-        document.getElementById('kpiNormal').textContent = data.normalCount;
-        document.getElementById('kpiLow').textContent = data.lowCount;
-
         const pct = (v) => data.totalCount ? ((v / data.totalCount) * 100).toFixed(1) : 0;
-        document.getElementById('kpiHighPct').textContent = `${pct(data.highCount)}% do total`;
-        document.getElementById('kpiNormalPct').textContent = `${pct(data.normalCount)}% do total`;
-        document.getElementById('kpiLowPct').textContent = `${pct(data.lowCount)}% do total`;
-
-        // Calculate and populate all-time completed processes KPI
-        if (data.completedMap) {
-            const totalCompleted = Object.values(data.completedMap).reduce((acc, curr) => acc + curr, 0);
-            document.getElementById('kpiCompleted').textContent = totalCompleted;
-            document.getElementById('kpiCompletedPct').textContent = `${pct(totalCompleted)}% do total`;
-        }
-
-        updateCampusTable(data.campusMap);
-        updateUnitTable(data.unitMap);
 
         // 2026-specific data
         if (data.data2026) {

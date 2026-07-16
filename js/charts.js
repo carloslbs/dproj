@@ -342,4 +342,65 @@ function renderCharts(data) {
             }
         });
     }
+
+    // 8. Evolution Chart
+    const evolutionEl = document.getElementById('chartEvolution');
+    if (evolutionEl) {
+        destroyChart('evolution');
+        charts.evolution = new Chart(evolutionEl, {
+            type: 'bar',
+            data: {
+                labels: ['2022', '2023', '2024', '2025', '2026'],
+                datasets: [
+                    {
+                        label: 'Recebidos',
+                        data: [65, 91, 95, 71, 62],
+                        backgroundColor: 'rgba(0, 242, 254, 0.75)',
+                        borderColor: '#00f2fe',
+                        borderWidth: 2,
+                        borderRadius: 8,
+                        hoverBackgroundColor: '#00f2fe',
+                        barPercentage: 0.8,
+                        categoryPercentage: 0.8
+                    },
+                    {
+                        label: 'Concluídos',
+                        data: [35, 62, 63, 68, 45],
+                        backgroundColor: 'rgba(79, 172, 254, 0.75)',
+                        borderColor: '#4facfe',
+                        borderWidth: 2,
+                        borderRadius: 8,
+                        hoverBackgroundColor: '#4facfe',
+                        barPercentage: 0.8,
+                        categoryPercentage: 0.8
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    datalabels: {
+                        color: '#ffffff',
+                        font: { size: 18, weight: '800' },
+                        anchor: 'end',
+                        align: 'top',
+                        offset: 4
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        ticks: { font: { size: 16, weight: '700' }, color: '#e5e7eb' }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { size: 18, weight: '700' }, color: '#e5e7eb' }
+                    }
+                }
+            }
+        });
+    }
 }
