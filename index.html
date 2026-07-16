@@ -49,81 +49,53 @@
     <div class="slides-wrapper">
 
         <div class="slide active" id="slide1">
-            <div class="layout-overview">
+            <div class="layout-overview" style="grid-template-rows: auto 1fr; gap: 3vh; height: 100%;">
+                
                 <div class="kpi-row">
-                    <div class="kpi-card" style="--accent-color: var(--total-blue); --accent-bg: var(--total-blue-bg)">
+                    <div class="kpi-card" style="--accent-color: #00f2fe; --accent-bg: rgba(0, 242, 254, 0.15)">
                         <div class="kpi-info">
-                            <span class="kpi-label">Total de Demandas</span>
-                            <span class="kpi-value" id="kpiTotal">-</span>
-                            <span class="kpi-subtext">Processamento ativo</span>
+                            <span class="kpi-label">Total Recebidos</span>
+                            <span class="kpi-value">384</span>
                         </div>
-                        <div class="kpi-icon-wrapper" style="color: var(--total-blue)">📋</div>
+                        <div class="kpi-icon-wrapper" style="color: #00f2fe">📥</div>
                     </div>
-                    <div class="kpi-card" style="--accent-color: #00BFA5; --accent-bg: rgba(0, 191, 165, 0.15)">
+                    <div class="kpi-card" style="--accent-color: #4facfe; --accent-bg: rgba(79, 172, 254, 0.15)">
                         <div class="kpi-info">
-                            <span class="kpi-label">Processos Concluídos</span>
-                            <span class="kpi-value" id="kpiCompleted">-</span>
-                            <span class="kpi-subtext" id="kpiCompletedPct">-% do total</span>
+                            <span class="kpi-label">Total Concluídos</span>
+                            <span class="kpi-value">273</span>
                         </div>
-                        <div class="kpi-icon-wrapper" style="color: #00BFA5">✅</div>
+                        <div class="kpi-icon-wrapper" style="color: #4facfe">✅</div>
                     </div>
-                    <div class="kpi-card" style="--accent-color: var(--priority-high); --accent-bg: var(--priority-high-bg)">
+                    <div class="kpi-card" style="--accent-color: #10b981; --accent-bg: rgba(16, 185, 129, 0.15)">
                         <div class="kpi-info">
-                            <span class="kpi-label">Prioridade Alta</span>
-                            <span class="kpi-value" id="kpiHigh">-</span>
-                            <span class="kpi-subtext" id="kpiHighPct">-% do total</span>
+                            <span class="kpi-label">Taxa Média de Conclusão</span>
+                            <span class="kpi-value">71,1%</span>
                         </div>
-                        <div class="kpi-icon-wrapper" style="color: var(--priority-high)">🔴</div>
+                        <div class="kpi-icon-wrapper" style="color: #10b981">📈</div>
                     </div>
-                    <div class="kpi-card" style="--accent-color: var(--priority-normal); --accent-bg: var(--priority-normal-bg)">
+                    <div class="kpi-card" style="--accent-color: #f59e0b; --accent-bg: rgba(245, 158, 11, 0.15)">
                         <div class="kpi-info">
-                            <span class="kpi-label">Prioridade Normal</span>
-                            <span class="kpi-value" id="kpiNormal">-</span>
-                            <span class="kpi-subtext" id="kpiNormalPct">-% do total</span>
+                            <span class="kpi-label">Melhor Eficiência</span>
+                            <span class="kpi-value" style="font-size: 1.6rem; line-height: 1.1;">2025<br><span style="font-size: 1.2rem; color: var(--text2)">95,8%</span></span>
                         </div>
-                        <div class="kpi-icon-wrapper" style="color: var(--priority-normal)">🟡</div>
-                    </div>
-                    <div class="kpi-card" style="--accent-color: var(--priority-low); --accent-bg: var(--priority-low-bg)">
-                        <div class="kpi-info">
-                            <span class="kpi-label">Prioridade Baixa</span>
-                            <span class="kpi-value" id="kpiLow">-</span>
-                            <span class="kpi-subtext" id="kpiLowPct">-% do total</span>
-                        </div>
-                        <div class="kpi-icon-wrapper" style="color: var(--priority-low)">🟢</div>
+                        <div class="kpi-icon-wrapper" style="color: #f59e0b">🏆</div>
                     </div>
                 </div>
 
-                <div class="lists-row">
-                    <div class="panel-card">
-                        <div class="panel-title">Demandas por Campus</div>
-                        <div class="data-table-container">
-                            <table class="data-table">
-                               <thead>
-                                   <tr>
-                                       <th>Campus</th>
-                                       <th style="text-align: right;">Total de Demandas</th>
-                                   </tr>
-                               </thead>
-                               <tbody id="campusTableBody"></tbody>
-                            </table>
-                        </div>
+                <div class="chart-box" style="height: 100%; display: flex; flex-direction: column; justify-content: center;">
+                    <div class="chart-title" style="margin-bottom: 0.5rem; text-align: center;">Evolução Histórica das Demandas</div>
+                    <div class="slide-subtitle" style="text-align: center; color: var(--text2); font-size: 1.1rem; margin-bottom: 1.5rem; font-weight: 500;">Processos Recebidos x Processos Concluídos (2022–2026)</div>
+                    
+                    <div style="text-align: center; margin-bottom: 1rem; font-size: 1rem; font-weight: 600;">
+                        <span style="color: #00f2fe; margin-right: 2rem;">■ Recebidos</span>
+                        <span style="color: #4facfe;">■ Concluídos</span>
                     </div>
-
-                    <div class="panel-card">
-                        <div class="panel-title">Demandas por Unidade Requisitante</div>
-                        <div class="data-table-container">
-                            <table class="data-table">
-                               <thead>
-                                   <tr>
-                                       <th>Unidade</th>
-                                       <th style="text-align: right;">Total de Demandas</th>
-                                   </tr>
-                               </thead>
-                               <tbody id="unitTableBody"></tbody>
-                            </table>
-                        </div>
+                    
+                    <div class="chart-wrapper-inner" style="flex: 1; min-height: 0;">
+                        <canvas id="chartEvolution"></canvas>
                     </div>
                 </div>
+
             </div>
         </div>
 
@@ -209,17 +181,6 @@
             </div>
         </div>
 
-        <div class="slide" id="slide3">
-            <div class="layout-charts-1">
-                <div class="chart-box">
-                    <div class="chart-title">Evolução: Processos Recebidos por Ano</div>
-                    <div class="chart-wrapper-inner">
-                        <canvas id="chartYear"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="slide" id="slide4">
             <div class="layout-charts-1">
                 <div class="chart-box">
@@ -242,17 +203,6 @@
             </div>
         </div>
 
-        <div class="slide" id="slide6">
-            <div class="layout-charts-1">
-                <div class="chart-box">
-                    <div class="chart-title">Processos Concluídos</div>
-                    <div class="chart-wrapper-inner">
-                        <canvas id="chartCompleted"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
 
     <footer>
@@ -265,8 +215,6 @@
                 <span class="dot" onclick="jumpToSlide(1)"></span>
                 <span class="dot" onclick="jumpToSlide(2)"></span>
                 <span class="dot" onclick="jumpToSlide(3)"></span>
-                <span class="dot" onclick="jumpToSlide(4)"></span>
-                <span class="dot" onclick="jumpToSlide(5)"></span>
             </div>
             <button class="btn-control" id="playPauseBtn" onclick="toggleSlideshow()">
                 <span>⏸</span> Pause
